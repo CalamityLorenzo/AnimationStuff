@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MyAnimationStuff.Animation;
 using System;
 using System.Collections.Generic;
@@ -9,17 +7,11 @@ using System.Text;
 
 namespace MyAnimationStuff
 {
-    class PlayerCharTimeAnimation : DrawableGameComponent
+    class WalkingManEntity
     {
-
         Directions Direction = Directions.None;
-        Texture2D PlayerChar;
         Vector2 Position;
-
-        SpriteBatch spriteBatch;
-
-        WalkingManAnimations PlayerAnim;
-
+        AnimationBase WalkingAnimations;
         float HorizVelocity, VertVelocity;
         float OldHorizVelocity, OldVertVelocity;
         string CurrentAnimationStateName;
@@ -29,45 +21,46 @@ namespace MyAnimationStuff
         // factor the velocity is accelerated by
         float HorizAcceleration, VertAcceleration;
 
-        public Vector2 CurrentPosition{get{return this.Position;}}
-
-        public PlayerCharTimeAnimation(Game game, Vector2 StartPosition, int SpeedX, int SpeedY)
-            : base(game)
+        public WalkingManEntity(Vector2 StartPosition, int SpeedX, int SpeedY, int TextureWidth, int TextureHeight)
         {
             this.Position = StartPosition;
             this.SpeedX = SpeedX;
             this.SpeedY = SpeedY;
             this.HorizAcceleration = 1f;
             this.VertAcceleration = 1f;
+
+            WalkingAnimations = new WalkingManAnimations(TextureWidth, TextureHeight, 144, 136);
+
         }
 
-        protected override void LoadContent()
+        public Rectangle CurrentFrame()
         {
-            this.PlayerChar = Game.Content.Load<Texture2D>("WalkingMan");
-            this.PlayerAnim = new WalkingManAnimations(PlayerChar.Width, PlayerChar.Height, 144, 136);
-            base.LoadContent();
+            return WalkingAnimations.CurrentFrameRectangle();
         }
 
-        public void SetSpriteBatch(SpriteBatch spriteBatch)
+        // This enum is additive
+        public void SetDirection(Directions AddDirection)
         {
-            this.spriteBatch = spriteBatch;
+            if (AddDirection == Directions.None)
+            {
+                this.Direction = Directions.None;
+            }
+            else
+            {
+                this.Direction = this.Direction | AddDirection;
+            }
         }
 
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
-           
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            // Sets Character movement state
-            CheckKeyboard();
-
+            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             UpdatePosition(deltaTime);
             UpdateAnimation();
 
             this.Position.X += this.HorizVelocity;
             this.Position.Y += this.VertVelocity;
 
-            this.PlayerAnim.Update(gameTime.ElapsedGameTime.Milliseconds);
-            base.Update(gameTime);
+            this.WalkingAnimations.Update(gameTime.ElapsedGameTime.Milliseconds);
         }
 
         protected void UpdatePosition(float deltaTime)
@@ -79,17 +72,17 @@ namespace MyAnimationStuff
             VertVelocity = 0f;
             HorizVelocity = 0f;
             // vertical
-            if ((this.Direction & Directions.Up)!=0)
+            if ((this.Direction & Directions.Up) != 0)
             {
                 VertVelocity = (-SpeedY * deltaTime) * this.VertAcceleration;
             }
-            else if ((this.Direction & Directions.Down) !=0)
+            else if ((this.Direction & Directions.Down) != 0)
             {
                 VertVelocity = (+SpeedY * deltaTime) * this.VertAcceleration;
             }
 
             // horizontal
-            if ((this.Direction & Directions.Left)!=0)
+            if ((this.Direction & Directions.Left) != 0)
             {
                 HorizVelocity = (-SpeedX * deltaTime) * this.HorizAcceleration;
             }
@@ -101,12 +94,12 @@ namespace MyAnimationStuff
 
         private void UpdateAnimation()
         {
-    // Stopped
+            // Stopped
             if (HorizVelocity == 0 && VertVelocity == 0)
             {
                 if (OldHorizVelocity == 0 && OldVertVelocity == 0)
                 {
-                    this.PlayerAnim.SetAnimationSet(this.CurrentAnimationStateName);
+                    this.WalkingAnimations.SetAnimationSet(this.CurrentAnimationStateName);
                     return;
                 }
 
@@ -124,7 +117,7 @@ namespace MyAnimationStuff
 
                 if (OldHorizVelocity != 0 && OldVertVelocity == 0)
                 {
-                    if (OldHorizVelocity  < 0)
+                    if (OldHorizVelocity < 0)
                     {
                         this.CurrentAnimationStateName = "Std_West";
                     }
@@ -135,7 +128,7 @@ namespace MyAnimationStuff
                 }
                 else if (OldHorizVelocity != 0 && OldVertVelocity != 0)
                 {
-                    if (OldHorizVelocity >0)
+                    if (OldHorizVelocity > 0)
                     {
                         if (OldVertVelocity > 0)
                         {
@@ -159,10 +152,10 @@ namespace MyAnimationStuff
                     }
                 }
 
-                this.PlayerAnim.SetAnimationSet(this.CurrentAnimationStateName);
+                this.WalkingAnimations.SetAnimationSet(this.CurrentAnimationStateName);
                 return;
             }
-   // Vertical
+            // Vertical
             if (HorizVelocity == 0 && VertVelocity != 0)
             {
                 if (VertVelocity < 0)
@@ -176,7 +169,7 @@ namespace MyAnimationStuff
                 }
             }
 
-// HoRIzONTAL
+            // HoRIzONTAL
             if (HorizVelocity != 0 && VertVelocity == 0)
             {
                 if (HorizVelocity < 0)
@@ -189,7 +182,7 @@ namespace MyAnimationStuff
                     this.CurrentAnimationStateName = "Wlk_East";
                 }
             }
-// DIags
+            // DIags
             if (HorizVelocity != 0 && VertVelocity != 0)
             {
                 if (HorizVelocity > 0)
@@ -218,45 +211,15 @@ namespace MyAnimationStuff
                 }
 
             }
-            this.PlayerAnim.SetAnimationSet(this.CurrentAnimationStateName);
+            this.WalkingAnimations.SetAnimationSet(this.CurrentAnimationStateName);
 
 
         }
 
-        protected void CheckKeyboard(){
-            var keyState = Keyboard.GetState();
-            // Reset the Directions
-            Direction = Directions.None;
-            // vertical
-            if (keyState.IsKeyDown(Keys.W))
-            {
-                Direction = Direction | Directions.Up;
-            }
-            else if (keyState.IsKeyDown(Keys.S))
-            {
-                Direction = Direction | Directions.Down;         
-            }
 
-            // horizontal
-            if (keyState.IsKeyDown(Keys.A))
-            {
-                Direction = Direction | Directions.Left;
-            }
-            else if (keyState.IsKeyDown(Keys.D))
-            {
-                Direction = Direction | Directions.Right;
-            }
-        }
-
-        public override void Draw(GameTime gameTime)
+        internal Vector2 CurrentPosition()
         {
-            spriteBatch.Begin();
-
-            var currentAnimFrame = this.PlayerAnim.CurrentFrameRectangle();
-            spriteBatch.Draw(this.PlayerChar, this.Position, currentAnimFrame,Color.White, 0.0f, new Vector2(), 0.8f, SpriteEffects.None,1f);
-            spriteBatch.End();
-
-            base.Draw(gameTime);
+            return Position;
         }
     }
 }

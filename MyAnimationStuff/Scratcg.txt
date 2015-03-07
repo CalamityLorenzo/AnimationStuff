@@ -1,0 +1,27 @@
+basic edits
+make sprite imgae 144 x 136.
+16px gutter left and right.
+
+standard Bounding box
+112 x 116
+
+
+Map class
+=========
+Large array of blocks that has the background.
+So:
+1. Decide on a block size
+2. Create a large array that describes that area.
+There are two aspects here.
+a. Graphics
+b. Collision Map.
+
+
+If there is a portion of the map off the screen, we don't draw it.
+Only draw elements of the array that are currently visible.
+thus -
+1. Don't draw negative value map elements
+2. Don't draw Elements that are positioned greated than the screenWidth. (Their start position, not length)
+3. Don't draw Elements that are positioned greater than the screen Heighr (Their, start position, not height)
+
+We need track the positions of the elements releative to the screen....

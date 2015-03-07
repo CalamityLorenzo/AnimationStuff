@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MouseStuff;
+using MouseStuff.Extensions;
+using MyAnimationStuff.Maps;
 
 namespace MyAnimationStuff
 {
@@ -12,11 +15,21 @@ namespace MyAnimationStuff
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         PlayerCharTimeAnimation playerAnimaton;
+        LevelMap lvlMap;
+
+        MousePointer mp;
+        DrawSmartArseLine sal;
+
+        Vector2 lePos = new Vector2(500, 500);
+        Texture2D centreBlock;
         public Game1()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+        
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = 768;
+            Content.RootDirectory = "Content";  
         }
 
         /// <summary>
@@ -28,8 +41,17 @@ namespace MyAnimationStuff
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            playerAnimaton = new PlayerCharTimeAnimation(this, new Vector2(40, 40));
+            playerAnimaton = new PlayerCharTimeAnimation(this, new Vector2(40, 40), 98, 98);
+            mp = new MousePointer(this);
             this.Components.Add(playerAnimaton);
+            lvlMap = new LevelMap(this,this.GraphicsDevice.DisplayMode.Width, this.GraphicsDevice.DisplayMode.Height,  new DemoMapConfig(), new Vector2(0, 0));
+            sal = new DrawSmartArseLine(this);
+
+            this.Components.Add(sal);
+            this.Components.Add(lvlMap);
+            this.Components.Add(mp);
+            SpriteBatchExtensions.SetDevice(this.GraphicsDevice);
+
             base.Initialize();
         }
 
@@ -42,7 +64,14 @@ namespace MyAnimationStuff
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             this.Services.AddService(typeof(SpriteBatch), spriteBatch);
+            mp.SetSpriteBatch(spriteBatch);
+            sal.SetSpriteBatch(spriteBatch);
+            playerAnimaton.SetSpriteBatch(spriteBatch);
             // TODO: use this.Content to load your game content here
+
+            centreBlock = new Texture2D(this.GraphicsDevice, 1, 1);
+            centreBlock.SetData<Color>(new Color[]{Color.White});
+
         }
 
         /// <summary>
@@ -65,8 +94,27 @@ namespace MyAnimationStuff
                 Exit();
 
             // TODO: Add your update logic here
-
+            DrawSmartArseLineTHingy();
             base.Update(gameTime);
+        }
+
+        private void DrawSmartArseLineTHingy()
+        {
+            var mState = Mouse.GetState();
+
+            if (mState.LeftButton == ButtonState.Pressed && LineDraw == false)
+            {
+                LineDraw = true;
+               lePos =  new Vector2(mState.X, mState.Y);
+                //sal.SetLine(new Vector2(this.playerAnimaton.CurrentPosition.X + 72, this.playerAnimaton.CurrentPosition.Y + 68), new Vector2(mState.X, mState.Y));
+            }   
+
+            sal.SetLine(new Vector2(this.playerAnimaton.CurrentPosition.X + 72, this.playerAnimaton.CurrentPosition.Y + 68), lePos);
+
+            if (mState.LeftButton == ButtonState.Released && LineDraw == true)
+            {
+                LineDraw = false;
+            }
         }
 
         /// <summary>
@@ -78,8 +126,10 @@ namespace MyAnimationStuff
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+       
             base.Draw(gameTime);
         }
+
+        public bool LineDraw { get; set; }
     }
 }

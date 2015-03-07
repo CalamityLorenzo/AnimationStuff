@@ -52,12 +52,11 @@ namespace MyAnimationStuff.Animation
             this.CurrentFrameRect = FrameRects[0];
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(int  elapsedMilliseconds)
         {
             // We have made it to the next frame
             if (this.AggregateUpdateInterval > this.CurrentFrame.MilliSecondInterval)
             {
-
 
                 if (this.CurrentFrame.MilliSecondInterval == 0 && this.CurrentAnimationSet.IsRepeating == false)
                 {
@@ -83,12 +82,17 @@ namespace MyAnimationStuff.Animation
             else
             {
                 // update the aggreate
-                this.AggregateUpdateInterval += gameTime.ElapsedGameTime.Milliseconds;
+                this.AggregateUpdateInterval += elapsedMilliseconds;
             }
         }
 
         public void SetAnimationSet(string Name)
         {
+            if (Name == null)
+            {
+                Name = "NormalPos";
+            }
+
             // if it's different to what's already chosen..
             if (CurrentAnimationSet == null || this.CurrentAnimationSet.Name !=Name)
             {
