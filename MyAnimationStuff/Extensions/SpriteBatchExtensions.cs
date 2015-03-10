@@ -31,9 +31,9 @@ namespace MyAnimationStuff.Extensions
             //left
             sb.DrawLine(new Rectangle(Rectangle.X, Rectangle.Y, LineWidth, Rectangle.Height), Colour);
             //right
-            sb.DrawLine(new Rectangle(Rectangle.X + Rectangle.Width, Rectangle.Y, LineWidth, Rectangle.Height), Colour);
+            sb.DrawLine(new Rectangle(Rectangle.X + Rectangle.Width-LineWidth, Rectangle.Y, LineWidth, Rectangle.Height), Colour);
             // bototm
-            sb.DrawLine(new Rectangle(Rectangle.X, Rectangle.Y + Rectangle.Height, Rectangle.Width, LineWidth), Colour);
+            sb.DrawLine(new Rectangle(Rectangle.X, Rectangle.Y + Rectangle.Height - LineWidth, Rectangle.Width, LineWidth), Colour);
 
 
         }

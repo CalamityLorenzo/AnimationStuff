@@ -43,18 +43,9 @@ namespace MyAnimationStuff
             return WalkingAnimations.CurrentFrameRectangle();
         }
 
-        // This enum is additive
+        // This enum is additive [flags]
         public void SetDirection(Directions Directions)
         {
-            //if (AddDirection == Directions.None)
-            //{
-            //    this.Direction = Directions.None;
-            //}
-            //else
-            //{
-            //    this.Direction = this.Direction | AddDirection;
-            //}
-
             this.Direction = Directions;
         }
 
