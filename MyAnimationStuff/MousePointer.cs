@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MouseStuff.Extensions;
+using MyAnimationStuff.Extensions;
 
-namespace MouseStuff
+namespace MyAnimationStuff
 {
     class MousePointer :DrawableGameComponent
     {

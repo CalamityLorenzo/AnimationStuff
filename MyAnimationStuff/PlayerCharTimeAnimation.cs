@@ -12,7 +12,7 @@ namespace MyAnimationStuff
     class PlayerCharTimeAnimation : DrawableGameComponent
     {
 
-        Directions Direction = Directions.None;
+        protected Directions Direction = Directions.None;
         Texture2D PlayerChar;
         Vector2 Position;
 

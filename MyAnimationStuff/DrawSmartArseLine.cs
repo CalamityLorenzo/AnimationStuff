@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MouseStuff.Extensions;
+using MyAnimationStuff.Extensions;
 namespace MyAnimationStuff
 {
     class DrawSmartArseLine : DrawableGameComponent

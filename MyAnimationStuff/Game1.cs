@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MouseStuff;
-using MouseStuff.Extensions;
+using MyAnimationStuff;
+using MyAnimationStuff.Extensions;
 using MyAnimationStuff.Maps;
 
 namespace MyAnimationStuff
@@ -14,7 +14,7 @@ namespace MyAnimationStuff
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        PlayerCharTimeAnimation playerAnimaton;
+        DirectionFindingManComponent playerAnimaton;
         LevelMap lvlMap;
 
         MousePointer mp;
@@ -41,7 +41,7 @@ namespace MyAnimationStuff
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            playerAnimaton = new PlayerCharTimeAnimation(this, new Vector2(40, 40), 98, 98);
+            playerAnimaton = new DirectionFindingManComponent(this, new Vector2(100,500), 98,98);
             mp = new MousePointer(this);
             this.Components.Add(playerAnimaton);
             lvlMap = new LevelMap(this,this.GraphicsDevice.DisplayMode.Width, this.GraphicsDevice.DisplayMode.Height,  new DemoMapConfig(), new Vector2(0, 0));
@@ -71,6 +71,8 @@ namespace MyAnimationStuff
 
             centreBlock = new Texture2D(this.GraphicsDevice, 1, 1);
             centreBlock.SetData<Color>(new Color[]{Color.White});
+
+            playerAnimaton.SetDestination(new Vector2(500, 123));
 
         }
 
@@ -107,9 +109,10 @@ namespace MyAnimationStuff
                 LineDraw = true;
                lePos =  new Vector2(mState.X, mState.Y);
                 //sal.SetLine(new Vector2(this.playerAnimaton.CurrentPosition.X + 72, this.playerAnimaton.CurrentPosition.Y + 68), new Vector2(mState.X, mState.Y));
+               this.playerAnimaton.SetDestination(lePos);
             }   
 
-            sal.SetLine(new Vector2(this.playerAnimaton.CurrentPosition.X + 72, this.playerAnimaton.CurrentPosition.Y + 68), lePos);
+            sal.SetLine(new Vector2(this.playerAnimaton.CurrentPosition().X + 72, this.playerAnimaton.CurrentPosition().Y + 68), lePos);
 
             if (mState.LeftButton == ButtonState.Released && LineDraw == true)
             {

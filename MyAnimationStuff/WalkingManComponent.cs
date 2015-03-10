@@ -11,14 +11,14 @@ namespace MyAnimationStuff
     class WalkingManComponent : DrawableGameComponent
     {
 
-        SpriteBatch sb;
-        WalkingManEntity Man;
-        Texture2D WalkingManTexture;
-        Vector2 StartPosition;
+        protected SpriteBatch sb;
+        protected WalkingManEntity Man;
+        protected Texture2D WalkingManTexture;
+        protected Vector2 StartPosition;
 
         int speedX, speedY;
 
-        Directions Directions = Directions.None;
+        protected Directions Directions = Directions.None;
 
         public WalkingManComponent(Game game, Vector2 StartPosition, int SpeedX, int SpeedY) : base(game) {
 
@@ -30,24 +30,27 @@ namespace MyAnimationStuff
         protected override void LoadContent()
         {
             this.WalkingManTexture = Game.Content.Load<Texture2D>("WalkingMan");
-            this.Man = new WalkingManEntity(StartPosition, this.speedX, this.speedY, this.WalkingManTexture.Width, this.WalkingManTexture.Height);
+            this.Man = new WalkingManEntity(StartPosition, this.speedX, this.speedY, this.WalkingManTexture.Width, this.WalkingManTexture.Height, 144, 136);
             base.LoadContent();
         }
 
-        public void SetSpritebatch(SpriteBatch sb)
+        public void SetSpriteBatch(SpriteBatch sb)
         {
             this.sb = sb;
         }
 
-        // Method is subClass is to be how you move the character in a subclass
+        // Method is subClassed is to be how you move the character in a subclass
         // by keys, or automagically.
-        protected void UpdatePosition(){
+        protected virtual void UpdatePosition(){
             // Default this to nothing.
             this.Directions = Directions.None;
         }
 
         public override void Update(GameTime gameTime)
         {
+            // Where the interactive actions will happen (Keys pressed, next positio calculated etc)
+            this.UpdatePosition();
+            
             Man.SetDirection(this.Directions);
             Man.Update(gameTime);
             base.Update(gameTime);
@@ -60,5 +63,11 @@ namespace MyAnimationStuff
             sb.End();
             base.Draw(gameTime);
         }
+
+        public Vector2 CurrentPosition()
+        {
+            return this.Man.CurrentPosition();
+        }
+
     }
 }

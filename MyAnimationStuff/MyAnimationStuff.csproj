@@ -43,9 +43,11 @@
     <Compile Include="Animation\Directions.cs" />
     <Compile Include="Animation\FrameData.cs" />
     <Compile Include="Animation\PlayerAnimation.cs" />
+    <Compile Include="DirectionFindingManComponent.cs" />
     <Compile Include="DrawSmartArseLine.cs" />
     <Compile Include="Extensions\Bresenham.cs" />
     <Compile Include="Extensions\SpriteBatchExtensions.cs" />
+    <Compile Include="KeyWalkingManComponent.cs" />
     <Compile Include="Maps\DemoMap.cs" />
     <Compile Include="Maps\LevelMap.cs" />
     <Compile Include="Game1.cs" />

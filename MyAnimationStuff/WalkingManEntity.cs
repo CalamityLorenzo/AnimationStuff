@@ -21,7 +21,9 @@ namespace MyAnimationStuff
         // factor the velocity is accelerated by
         float HorizAcceleration, VertAcceleration;
 
-        public WalkingManEntity(Vector2 StartPosition, int SpeedX, int SpeedY, int TextureWidth, int TextureHeight)
+        public readonly int CellWidth, CellHeight;
+
+        public WalkingManEntity(Vector2 StartPosition, int SpeedX, int SpeedY, int TextureWidth, int TextureHeight, int CellWidth, int CellHeight)
         {
             this.Position = StartPosition;
             this.SpeedX = SpeedX;
@@ -29,7 +31,10 @@ namespace MyAnimationStuff
             this.HorizAcceleration = 1f;
             this.VertAcceleration = 1f;
 
-            WalkingAnimations = new WalkingManAnimations(TextureWidth, TextureHeight, 144, 136);
+            this.CellWidth = CellWidth;
+            this.CellHeight = CellHeight;
+
+            WalkingAnimations = new WalkingManAnimations(TextureWidth, TextureHeight, CellWidth, CellHeight);
 
         }
 
@@ -39,16 +44,18 @@ namespace MyAnimationStuff
         }
 
         // This enum is additive
-        public void SetDirection(Directions AddDirection)
+        public void SetDirection(Directions Directions)
         {
-            if (AddDirection == Directions.None)
-            {
-                this.Direction = Directions.None;
-            }
-            else
-            {
-                this.Direction = this.Direction | AddDirection;
-            }
+            //if (AddDirection == Directions.None)
+            //{
+            //    this.Direction = Directions.None;
+            //}
+            //else
+            //{
+            //    this.Direction = this.Direction | AddDirection;
+            //}
+
+            this.Direction = Directions;
         }
 
         public void Update(GameTime gameTime)
@@ -216,10 +223,10 @@ namespace MyAnimationStuff
 
         }
 
-
         internal Vector2 CurrentPosition()
         {
             return Position;
         }
+    
     }
 }
