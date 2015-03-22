@@ -43,7 +43,7 @@ namespace MyAnimationStuff
             // TODO: Add your initialization logic here
             playerAnimaton = new DirectionFindingManComponent(this, new Vector2(100,500), 98,98);
             mp = new MousePointer(this);
-            this.Components.Add(playerAnimaton);
+           this.Components.Add(playerAnimaton);
             lvlMap = new LevelMap(this,this.GraphicsDevice.DisplayMode.Width, this.GraphicsDevice.DisplayMode.Height,  new DemoMapConfig(), new Vector2(0, 0));
             sal = new DrawSmartArseLine(this);
 
@@ -72,7 +72,7 @@ namespace MyAnimationStuff
             centreBlock = new Texture2D(this.GraphicsDevice, 1, 1);
             centreBlock.SetData<Color>(new Color[]{Color.White});
 
-            playerAnimaton.SetDestination(new Vector2(500, 123));
+         //playerAnimaton.SetDestination(new Vector2(500, 123));
 
         }
 
@@ -129,7 +129,9 @@ namespace MyAnimationStuff
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-       
+            spriteBatch.Begin();
+            spriteBatch.DrawRectangle(new Rectangle(100, 200, 100, 100),2, Color.Bisque);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
 

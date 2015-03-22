@@ -26,16 +26,15 @@ namespace MyAnimationStuff.Extensions
 
         public static void DrawRectangle(this SpriteBatch sb, Rectangle Rectangle, int LineWidth, Color Colour)
         {
+            // The Dimension include the line, so as for a 100x 100 you get 100x100. Not 100+LineWidthx100+LineWidth
             // top
             sb.DrawLine(new Rectangle(Rectangle.X, Rectangle.Y, Rectangle.Width, LineWidth), Colour);
             //left
-            sb.DrawLine(new Rectangle(Rectangle.X, Rectangle.Y, LineWidth, Rectangle.Height), Colour);
+            sb.DrawLine(new Rectangle(Rectangle.X, Rectangle.Y, LineWidth, Rectangle.Height- LineWidth), Colour);
             //right
-            sb.DrawLine(new Rectangle(Rectangle.X + Rectangle.Width, Rectangle.Y, LineWidth, Rectangle.Height), Colour);
+            sb.DrawLine(new Rectangle(Rectangle.X + Rectangle.Width-LineWidth, Rectangle.Y, LineWidth, Rectangle.Height-LineWidth), Colour);
             // bototm
-            sb.DrawLine(new Rectangle(Rectangle.X, Rectangle.Y + Rectangle.Height, Rectangle.Width, LineWidth), Colour);
-
-
+            sb.DrawLine(new Rectangle(Rectangle.X, Rectangle.Y + Rectangle.Height-LineWidth, Rectangle.Width, LineWidth), Colour);
         }
 
         public static void DrawLine(this SpriteBatch sb, Vector2 startPos, Vector2 endPos, int Width, Color Colour)
@@ -47,7 +46,7 @@ namespace MyAnimationStuff.Extensions
             }
 
             //BasicBresenham(sb, startPos, endPos, Colour);
-
+            // should handle straight lines seperatley here.
             // Get the enumerable points
             var LinePoints = Bresenham.GetLine(startPos, endPos);
             // slam 'e on the screen
